@@ -11,23 +11,9 @@ import storage from "redux-persist/lib/storage";
 
 import { rootReducer } from "./root-reducer";
 
-import thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
 
-// const loggerMiddleware = (store) => (next) => (action) => {
-//   if (!action.type) {
-//     return next(action);
-//   }
-
-//   console.log("\n\n\nLogger of " + action.type + " start here\n\n\n");
-//   console.log("payload: ", action.payload);
-//   console.log("currentState: ", store.getState());
-
-//   next(action);
-
-//   console.log("next state: ", store.getState());
-
-//   console.log("\n\n\nLogger of " + action.type + " end here\n\n\n");
-// };
+import { rootSaga } from "./root-saga";
 
 const persisConfig = {
   key: "root",
@@ -35,11 +21,13 @@ const persisConfig = {
   whitelist: ["cart"],
 };
 
+const sagaMiddleware = createSagaMiddleware();
+
 const persistedReducer = persistReducer(persisConfig, rootReducer);
 
 const middleWares = [
   process.env.NODE_ENV === "development" && logger,
-  thunk,
+  sagaMiddleware,
 ].filter(Boolean);
 
 const composeEnhancer =
@@ -55,5 +43,7 @@ export const store = createStore(
   undefined,
   composedEnhancers
 );
+
+sagaMiddleware.run(rootSaga);
 
 export const persistor = persistStore(store);
