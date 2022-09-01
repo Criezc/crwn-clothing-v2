@@ -2,10 +2,7 @@ import { useState } from "react";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-import {
-  selectCartTotal,
-  selectCartItems,
-} from "../../store/cart/cart.selector";
+import { selectCartTotal } from "../../store/cart/cart.selector";
 import { selectCurrentUser } from "../../store/user/user.selector";
 
 import { BUTTON_TYPE_CLASSES } from "./../button/button.component";
